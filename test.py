@@ -25,11 +25,11 @@ class KarmaRoutineTest(unittest.TestCase):
         profiles_list = karma_routine.load_person_profiles("profiles.csv")
         self.assertIn("actions", profiles_list[8].keys())
         self.assertIn("actions", profiles_list[40].keys())
-        self.assertIn("actions", profiles_list[51].keys())
+        self.assertIn("actions", profiles_list[22].keys())
 
     def test_load_person_profiles_person1(self):
         profiles_list = karma_routine.load_person_profiles("profiles.csv")
-        self.assertEqual(profiles_list[4],{"name":"Noah Jones"\
+        self.assertEqual(profiles_list[3], {"name":"Noah Jones"\
             ,"actions":["smoked in a restaurant toilet",\
                 "loves their family","cut the line","stole money"\
                 ,"doesn't respect their parents","donated money to Wikipedia"\

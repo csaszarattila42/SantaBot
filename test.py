@@ -15,6 +15,30 @@ class KarmaRoutineTest(unittest.TestCase):
         self.assertEqual(actions_dict["lied to a friend"], "naughty")
         self.assertEqual(actions_dict["got too drunk"], "naughty")
 
+    def test_load_person_profiles_have_names(self):
+        profiles_list = karma_routine.load_person_profiles("profiles.csv")
+        self.assertIn("name", profiles_list[0].keys())
+        self.assertIn("name", profiles_list[5].keys())
+        self.assertIn("name", profiles_list[30].keys())
+
+    def test_load_person_profiles_have_actions(self):
+        profiles_list = karma_routine.load_person_profiles("profiles.csv")
+        self.assertIn("actions", profiles_list[8].keys())
+        self.assertIn("actions", profiles_list[40].keys())
+        self.assertIn("actions", profiles_list[51].keys())
+
+    def test_load_person_profiles_person1(self):
+        profiles_list = karma_routine.load_person_profiles("profiles.csv")
+        self.assertEqual(profiles_list[4],{"name":"Noah Jones"\
+            ,"actions":["smoked in a restaurant toilet",\
+                "loves their family","cut the line","stole money"\
+                ,"doesn't respect their parents","donated money to Wikipedia"\
+                ,"listened to their partner","is always late","used renewable energies"\
+                ,"swears a lot","got too drunk","didn't silence the cellphone in a cinema"\
+                ,"gave money to a charity","threw garbage on the street","helped a stranger"]
+            ,"ideal present categories":["decoration","travel"]\
+            })
+
 
 if __name__ == '__main__':
     unittest.main()

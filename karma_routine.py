@@ -22,4 +22,8 @@ def load_person_profiles(filename):
 
 
 def calculate_karma(actions, profiles):
-    pass
+    processed_profiles = profiles[:]
+    for profile in processed_profiles:
+        profile["karma"] = sum([actions[action] for action in profile["actions"]])
+
+    return processed_profiles

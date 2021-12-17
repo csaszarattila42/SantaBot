@@ -39,6 +39,21 @@ class KarmaRoutineTest(unittest.TestCase):
             ,"ideal present categories":["decoration","travel"]\
             })
 
+    def test_calc_karma(self):
+        profiles = [
+            {"name": "Cucc", "actions": ["planted a tree", "stole money"]},
+            {"name": "Valami", "actions": ["helped a friend", "planted a tree"]}
+        ]
+        actions = {
+            "planted a tree": 1,
+            "stole money": -1,
+            "helped a friend": 1
+        }
+        processed = karma_routine.calculate_karma(actions, profiles)
+
+        self.assertEqual(processed[0]["karma"], 0)
+        self.assertEqual(processed[1]["karma"], 2)
+
 
 if __name__ == '__main__':
     unittest.main()

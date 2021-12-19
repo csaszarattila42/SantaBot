@@ -1,5 +1,6 @@
 import unittest
 import karma_routine
+import ideal_present_routine
 
 
 class KarmaRoutineTest(unittest.TestCase):
@@ -57,6 +58,20 @@ class KarmaRoutineTest(unittest.TestCase):
 
         self.assertEqual(processed[0]["karma"], 0)
         self.assertEqual(processed[1]["karma"], 2)
+
+
+class IdealPresentRoutineTest(unittest.TestCase):
+    def test_load_presents_skips_fieldnames(self):
+        presents_dict = ideal_present_routine.load_present_types("presents.csv")
+
+        with self.assertRaises(KeyError):
+            print(presents_dict["presents"])
+
+    def test_load_presents_actually_loads(self):
+        presents_dict = ideal_present_routine.load_present_types("presents.csv")
+
+        self.assertEqual(presents_dict["pets"], "hamster,cat,dog,bird,turtle")
+        self.assertEqual(presents_dict["cloths"], "pants,socks,sweater,t-shirt,jacket")
 
 
 if __name__ == '__main__':

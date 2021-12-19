@@ -18,11 +18,11 @@ def get_random_present(present_types, desired_present_type):
 
 
 def is_naughty(person):
-    return person["karma"] < 0
+    return float(person["karma"]) < 0
 
 
 def is_very_good(person):
-    return person["karma"] >= 7
+    return float(person["karma"]) >= 7
 
 
 def calc_presents(profiles, present_types):
@@ -43,8 +43,15 @@ def write_solution(filename, present_types, profiles):
     with open(filename, "w", newline="") as output_file:
         writer = csv.DictWriter(output_file, [
             "name", "actions", "karma", "ideal present categories", "presents"
-        ])
+        ], delimiter=";")
         writer.writeheader()
         for person in profiles_with_presents:
             person["presents"] = ",".join(person["presents"])
             writer.writerow(person)
+
+
+if __name__ == "__main__":
+    write_solution("challenge-2.csv",
+                   load_present_types("presents.csv"),
+                   load_person_profiles("challenge-1.csv")
+                   )

@@ -36,3 +36,15 @@ def calc_presents(profiles, present_types):
             if is_very_good(person):
                 person["presents"].append(get_random_present(present_types, present_preferences[1]))
     return processed_profiles
+
+
+def write_solution(filename, present_types, profiles):
+    profiles_with_presents = calc_presents(profiles, present_types)
+    with open(filename, "w", newline="") as output_file:
+        writer = csv.DictWriter(output_file, [
+            "name", "actions", "karma", "ideal present categories", "presents"
+        ])
+        writer.writeheader()
+        for person in profiles_with_presents:
+            person["presents"] = ",".join(person["presents"])
+            writer.writerow(person)

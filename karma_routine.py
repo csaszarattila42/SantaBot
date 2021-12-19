@@ -27,3 +27,18 @@ def calculate_karma(actions, profiles):
         profile["karma"] = sum([actions[action] for action in profile["actions"]])
 
     return processed_profiles
+
+
+def write_solution(filename, actions, profiles):
+    profiles_with_karma = calculate_karma(actions, profiles)
+
+    with open(filename, "w", newline="") as output_file:
+        writer = csv.DictWriter(output_file, profiles_with_karma.keys(), delimiter=";")
+        writer.writeheader()
+        writer.writerows(profiles_with_karma)
+
+
+if __name__ == "__main__":
+    write_solution("challenge-1.csv",
+                   load_action_types("karma.csv"),
+                   load_person_profiles("profiles.csv"))

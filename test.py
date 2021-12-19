@@ -73,6 +73,37 @@ class IdealPresentRoutineTest(unittest.TestCase):
         self.assertEqual(presents_dict["pets"], "hamster,cat,dog,bird,turtle")
         self.assertEqual(presents_dict["cloths"], "pants,socks,sweater,t-shirt,jacket")
 
+    def test_calc_presents(self):
+        test_profiles = [
+            {
+                "name": "MacNaughty",
+                "karma": -2,
+                "ideal present categories": "pets,sports"
+            },
+            {
+                "name": "Mr. Normal",
+                "karma": 2,
+                "ideal present categories": "pets,cloths"
+            },
+            {
+                "name": "Ms. Saint",
+                "karma": 9,
+                "ideal present categories": "sports,pets,music"
+            }
+        ]
+        test_presents = {
+            "pets": "hamster,cat,dog,bird,turtle",
+            "sports": "basket ball,sneakers,dumbbells,fit ball,bicycle,sports bag",
+            "cloths": "pants,socks,sweater,t-shirt,jacket",
+            "music": "rock album,guitar,Spotify subscription,concert tickets,headphones"
+        }
+        processed = ideal_present_routine.calc_presents(test_profiles, test_presents)
+
+        self.assertEqual(processed[0]["presents"][0], ideal_present_routine.NAUGHTY_PRESENT)
+        self.assertIn(processed[1]["presents"][0], test_presents["pets"].split(","))
+        self.assertIn(processed[2]["presents"][0], test_presents["sports"].split(","))
+        self.assertIn(processed[2]["presents"][1], test_presents["pets"].split(","))
+
 
 if __name__ == '__main__':
     unittest.main()

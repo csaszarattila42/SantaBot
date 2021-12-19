@@ -11,20 +11,16 @@ def load_action_types(filename):
 
 
 def load_person_profiles(filename):
-    result = []
     with open(filename, newline="") as profile_file:
         profile_reader = csv.DictReader(profile_file, delimiter=";")
-        for person in profile_reader:
-            person["actions"] = person["actions"].split(",")
-            person["ideal present categories"] = person["ideal present categories"].split(",")
-            result.append(person)
+        result = [person for person in profile_reader]
     return result
 
 
 def calculate_karma(actions, profiles):
     processed_profiles = profiles[:]
     for profile in processed_profiles:
-        profile["karma"] = sum([actions[action] for action in profile["actions"]])
+        profile["karma"] = sum([actions[action.strip()] for action in profile["actions"].split(",")])
 
     return processed_profiles
 
@@ -33,9 +29,15 @@ def write_solution(filename, actions, profiles):
     profiles_with_karma = calculate_karma(actions, profiles)
 
     with open(filename, "w", newline="") as output_file:
-        writer = csv.DictWriter(output_file, profiles_with_karma.keys(), delimiter=";")
+        writer = csv.DictWriter(output_file, [
+            "name", "actions", "karma", "ideal present categories"
+        ], delimiter=";")
+
         writer.writeheader()
-        writer.writerows(profiles_with_karma)
+        for profile in profiles_with_karma:
+            profile["actions"] = ",".join(profile["actions"])
+            profile["ideal present categories"] = ",".join(profile["ideal present categories"])
+            writer.writerow(profile)
 
 
 if __name__ == "__main__":

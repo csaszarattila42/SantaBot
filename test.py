@@ -29,20 +29,24 @@ class KarmaRoutineTest(unittest.TestCase):
 
     def test_load_person_profiles_person1(self):
         profiles_list = karma_routine.load_person_profiles("profiles.csv")
-        self.assertEqual(profiles_list[3], {"name":"Noah Jones"\
-            ,"actions":["smoked in a restaurant toilet",\
-                "loves their family","cut the line","stole money"\
-                ,"doesn't respect their parents","donated money to Wikipedia"\
-                ,"listened to their partner","is always late","used renewable energies"\
-                ,"swears a lot","got too drunk","didn't silence the cellphone in a cinema"\
-                ,"gave money to a charity","threw garbage on the street","helped a stranger"]
-            ,"ideal present categories":["decoration","travel"]\
-            })
+        temp_maxDiff = self.maxDiff
+        self.maxDiff = None
+        self.assertEqual(profiles_list[3], {
+            "name": "Noah Jones",
+            "actions": "smoked in a restaurant toilet,loves their family,"
+            "cut the line,stole money,doesn't respect their parents,"
+            "donated money to Wikipedia,listened to their partner,is always late,"
+            "used renewable energies,swears a lot,got too drunk,"
+            "didn't silence the cellphone in a cinema,gave money to a charity,"
+            "threw garbage on the street,helped a stranger",
+            "ideal present categories": "decoration,travel"
+        })
+        self.maxDiff = temp_maxDiff
 
     def test_calc_karma(self):
         profiles = [
-            {"name": "Cucc", "actions": ["planted a tree", "stole money"]},
-            {"name": "Valami", "actions": ["helped a friend", "planted a tree"]}
+            {"name": "Cucc", "actions": "planted a tree, stole money"},
+            {"name": "Valami", "actions": "helped a friend, planted a tree"}
         ]
         actions = {
             "planted a tree": 1,

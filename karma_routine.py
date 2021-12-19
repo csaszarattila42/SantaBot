@@ -34,10 +34,7 @@ def write_solution(filename, actions, profiles):
         ], delimiter=";")
 
         writer.writeheader()
-        for profile in profiles_with_karma:
-            profile["actions"] = ",".join(profile["actions"])
-            profile["ideal present categories"] = ",".join(profile["ideal present categories"])
-            writer.writerow(profile)
+        writer.writerows(profiles_with_karma)
 
 
 if __name__ == "__main__":

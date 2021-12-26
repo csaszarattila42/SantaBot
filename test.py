@@ -1,6 +1,8 @@
 import unittest
+import math
 import karma_routine
 import ideal_present_routine
+import delivery_routine
 
 
 class KarmaRoutineTest(unittest.TestCase):
@@ -103,6 +105,26 @@ class IdealPresentRoutineTest(unittest.TestCase):
         self.assertIn(processed[1]["presents"][0], test_presents["pets"].split(","))
         self.assertIn(processed[2]["presents"][0], test_presents["sports"].split(","))
         self.assertIn(processed[2]["presents"][1], test_presents["pets"].split(","))
+
+
+class DeliveryRoutineTest(unittest.TestCase):
+    def test_edge_distance_zero(self):
+        edge1 = delivery_routine.Edge(delivery_routine.Point(1, 1), delivery_routine.Point(1, 1))
+        edge2 = delivery_routine.Edge(delivery_routine.Point(2.3, 6), delivery_routine.Point(2.3, 6))
+        edge3 = delivery_routine.Edge(delivery_routine.Point(-4.2, -1), delivery_routine.Point(-4.2, -1))
+
+        self.assertEqual(edge1.distance(), 0)
+        self.assertEqual(edge2.distance(), 0)
+        self.assertEqual(edge3.distance(), 0)
+
+    def test_edge_distance_square_diagonal(self):
+        edge1 = delivery_routine.Edge(delivery_routine.Point(1, 1), delivery_routine.Point(3, 3))
+        edge2 = delivery_routine.Edge(delivery_routine.Point(-1, 3), delivery_routine.Point(-2, 4))
+        edge3 = delivery_routine.Edge(delivery_routine.Point(-1.5, -2), delivery_routine.Point(3.5, -6))
+
+        self.assertAlmostEqual(edge1.distance(), math.sqrt(2)*2)
+        self.assertAlmostEqual(edge2.distance(), math.sqrt(2))
+        self.assertAlmostEqual(edge3.distance(), math.sqrt(2)*4)
 
 
 if __name__ == '__main__':

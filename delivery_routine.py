@@ -1,6 +1,5 @@
 from collections import namedtuple, deque
 from functools import cached_property
-from itertools import cycle
 import math
 
 Point = namedtuple("Point", "x y")
@@ -58,25 +57,19 @@ class Path:
             iter(edges)
         except TypeError:
             raise TypeError("edges argument must be an iterable") from None
-
         self._edges = deque(edges[:1])
+
+        is_connecting_to_path = lambda e: e.is_connecting_to(self._edges[0]) or e.is_connecting_to(self._edges[-1])
         input_edges = edges[:]
-        edge_iter = cycle(input_edges)
-        modified = True
-        while modified:
-            modified = False
-            try:
-                edge = next(edge_iter)
-            except StopIteration:
-                break
-            if edge.is_connecting_to(self._edges[0]) or edge.is_connecting_to(self._edges[-1]):
-                if edge.is_connecting_to(self._edges[0]):
-                    self._edges.appendleft(edge)
-                else:
-                    self._edges.append(edge)
-                input_edges.remove(edge)
-                edge_iter = cycle(input_edges)
-                modified = True
+        edge = next(filter(is_connecting_to_path, input_edges), None)
+
+        while edge is not None:
+            if edge.is_connecting_to(self._edges[0]):
+                self._edges.appendleft(edge)
+            else:
+                self._edges.append(edge)
+            input_edges.remove(edge)
+            edge = next(filter(is_connecting_to_path, input_edges), None)
 
         if not input_edges.empty():
             raise ValueError("The edges arent a path")

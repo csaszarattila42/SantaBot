@@ -1,5 +1,5 @@
 from collections import namedtuple, deque
-from functools import lru_cache
+from functools import cached_property
 from itertools import cycle
 import math
 
@@ -19,25 +19,37 @@ class Edge:
     def end_point(self) -> Point:
         return self._end_point
 
-    @property
-    @lru_cache(maxsize=1)
-    def get_distance(self) -> float:
+    # please do not consider this as a writable property, thank you!
+    @cached_property
+    def distance(self) -> float:
         return math.dist(self.start_point, self.end_point)
 
-    def flip(self):
-        return Edge(self.end_point, self.start_point)
+    def __iter__(self):
+        return iter((self.start_point, self.end_point))
+
+    # def flip(self):
+    #    return Edge(self.end_point, self.start_point)
 
     def __eq__(self, other) -> bool:
-        return set(self) == set(other)
-
-    def __str__(self) -> str:
-        return f"{self.start_point}-{self.end_point}"
+        return (
+            (
+                self.start_point == other.start_point and
+                self.end_point == other.end_point
+            ) or
+            (
+                self.start_point == other.end_point and
+                self.end_point == other.start_point
+            )
+        )
 
     def get_connecting_point(self, other) -> Point:
-        return set(self) & set(other)
+        if not self == other:
+            for point in self:
+                if point in other:
+                    return point
 
-    def is_connecting_to(self, other):
-        return len(self.get_connecting_point(other)) == 1
+    def is_connecting_to(self, other) -> bool:
+        return self.get_connecting_point(other) is not None
 
 
 class Path:
@@ -69,9 +81,16 @@ class Path:
         if not input_edges.empty():
             raise ValueError("The edges arent a path")
 
+    @cached_property
     def get_distance(self) -> float:
-        return sum(e.get_distance() for e in self._edges)
+        return sum(e.distance for e in self._edges)
 
     def __iadd__(self, other):
         self._edges.extend(other._edges)
+        self.get_distance.cache_clear()
         return self
+
+    def __add__(self, other):
+        new_path = Path(self._edges)
+        new_path += other
+        return new_path

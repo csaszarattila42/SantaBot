@@ -109,22 +109,80 @@ class IdealPresentRoutineTest(unittest.TestCase):
 
 class DeliveryRoutineTest(unittest.TestCase):
     def test_edge_distance_zero(self):
-        edge1 = delivery_routine.Edge(delivery_routine.Point(1, 1), delivery_routine.Point(1, 1))
-        edge2 = delivery_routine.Edge(delivery_routine.Point(2.3, 6), delivery_routine.Point(2.3, 6))
-        edge3 = delivery_routine.Edge(delivery_routine.Point(-4.2, -1), delivery_routine.Point(-4.2, -1))
+        edge_1 = delivery_routine.Edge(delivery_routine.Point(1, 1), delivery_routine.Point(1, 1))
+        edge_2 = delivery_routine.Edge(delivery_routine.Point(2.3, 6), delivery_routine.Point(2.3, 6))
+        edge_3 = delivery_routine.Edge(delivery_routine.Point(-4.2, -1), delivery_routine.Point(-4.2, -1))
 
-        self.assertEqual(edge1.distance(), 0)
-        self.assertEqual(edge2.distance(), 0)
-        self.assertEqual(edge3.distance(), 0)
+        self.assertEqual(edge_1.distance, 0)
+        self.assertEqual(edge_2.distance, 0)
+        self.assertEqual(edge_3.distance, 0)
 
     def test_edge_distance_square_diagonal(self):
-        edge1 = delivery_routine.Edge(delivery_routine.Point(1, 1), delivery_routine.Point(3, 3))
-        edge2 = delivery_routine.Edge(delivery_routine.Point(-1, 3), delivery_routine.Point(-2, 4))
-        edge3 = delivery_routine.Edge(delivery_routine.Point(-1.5, -2), delivery_routine.Point(3.5, -6))
+        edge_1 = delivery_routine.Edge(delivery_routine.Point(1, 1), delivery_routine.Point(3, 3))
+        edge_2 = delivery_routine.Edge(delivery_routine.Point(-1, 3), delivery_routine.Point(-2, 4))
+        edge_3 = delivery_routine.Edge(delivery_routine.Point(-1.5, -2), delivery_routine.Point(2.5, -6))
 
-        self.assertAlmostEqual(edge1.distance(), math.sqrt(2)*2)
-        self.assertAlmostEqual(edge2.distance(), math.sqrt(2))
-        self.assertAlmostEqual(edge3.distance(), math.sqrt(2)*4)
+        self.assertAlmostEqual(edge_1.distance, math.sqrt(2)*2)
+        self.assertAlmostEqual(edge_2.distance, math.sqrt(2))
+        self.assertAlmostEqual(edge_3.distance, math.sqrt(2)*4)
+
+    def test_edge_equality(self):
+        point_a = delivery_routine.Point(0.2, 3)
+        point_b = delivery_routine.Point(-2.1, 1)
+        point_c = delivery_routine.Point(-0.6, -1.5)
+        edge_1 = delivery_routine.Edge(point_a, point_c)
+        edge_2 = delivery_routine.Edge(point_b, point_a)
+        edge_3 = delivery_routine.Edge(point_c, point_a)
+        edge_4 = delivery_routine.Edge(delivery_routine.Point(-2.1, 1), delivery_routine.Point(0.2, 3))
+
+        self.assertEqual(edge_1, edge_1)
+        self.assertEqual(edge_3, edge_1)
+        self.assertEqual(edge_2, edge_4)
+
+        self.assertNotEqual(edge_1, edge_2)
+        self.assertNotEqual(edge_4, edge_3)
+        self.assertNotEqual(edge_3, edge_2)
+
+    def test_connecting_point_equal_edges(self):
+        point_a = delivery_routine.Point(0.2, 3)
+        point_b = delivery_routine.Point(-2.1, 1)
+        point_c = delivery_routine.Point(-0.6, -1.5)
+        edge_1 = delivery_routine.Edge(point_a, point_c)
+        edge_2 = delivery_routine.Edge(point_b, point_a)
+        edge_3 = delivery_routine.Edge(point_c, point_a)
+        edge_4 = delivery_routine.Edge(delivery_routine.Point(-2.1, 1), delivery_routine.Point(0.2, 3))
+
+        self.assertIsNone(edge_1.get_connecting_point(edge_1))
+        self.assertIsNone(edge_3.get_connecting_point(edge_1))
+        self.assertIsNone(edge_2.get_connecting_point(edge_4))
+
+    def test_connecting_point_no_point(self):
+        point_a = delivery_routine.Point(0.2, 3)
+        point_b = delivery_routine.Point(-2.1, 1)
+        point_c = delivery_routine.Point(-0.6, -1.5)
+        point_d = delivery_routine.Point(3.4, -3.7)
+        edge_1 = delivery_routine.Edge(point_a, point_c)
+        edge_2 = delivery_routine.Edge(point_b, point_d)
+        edge_3 = delivery_routine.Edge(point_b, point_a)
+        edge_4 = delivery_routine.Edge(point_c, point_d)
+
+        self.assertIsNone(edge_1.get_connecting_point(edge_2))
+        self.assertIsNone(edge_3.get_connecting_point(edge_4))
+
+    def test_connecting_point(self):
+        point_a = delivery_routine.Point(0.2, 3)
+        point_b = delivery_routine.Point(-2.1, 1)
+        point_c = delivery_routine.Point(-0.6, -1.5)
+        point_d = delivery_routine.Point(3.4, -3.7)
+        edge_1 = delivery_routine.Edge(point_a, point_c)
+        edge_2 = delivery_routine.Edge(point_b, point_d)
+        edge_3 = delivery_routine.Edge(point_b, point_a)
+        edge_4 = delivery_routine.Edge(point_c, point_d)
+
+        self.assertEqual(edge_1.get_connecting_point(edge_3), point_a)
+        self.assertEqual(edge_2.get_connecting_point(edge_4), point_d)
+        self.assertEqual(edge_4.get_connecting_point(edge_1), point_c)
+        self.assertEqual(edge_3.get_connecting_point(edge_2), point_b)
 
 
 if __name__ == '__main__':

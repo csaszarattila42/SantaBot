@@ -184,6 +184,28 @@ class DeliveryRoutineTest(unittest.TestCase):
         self.assertEqual(edge_4.get_connecting_point(edge_1), point_c)
         self.assertEqual(edge_3.get_connecting_point(edge_2), point_b)
 
+    def test_path_init(self):
+        points = [
+            delivery_routine.Point(3, 1),   # 0 A
+            delivery_routine.Point(0, 1),   # 1 B
+            delivery_routine.Point(-3, 1),  # 2 C
+            delivery_routine.Point(3, 5),   # 3 D
+            delivery_routine.Point(0, 5),   # 4 E
+            delivery_routine.Point(-3, 5)   # 5 F
+        ]
+        edges = [
+            delivery_routine.Edge(points[0], points[1]),  # 0
+            delivery_routine.Edge(points[4], points[0]),  # 1
+            delivery_routine.Edge(points[0], points[5]),  # 2
+            delivery_routine.Edge(points[3], points[1]),  # 3
+            delivery_routine.Edge(points[1], points[5]),  # 4
+            delivery_routine.Edge(points[2], points[3]),  # 5
+            delivery_routine.Edge(points[2], points[4]),  # 6
+            delivery_routine.Edge(points[5], points[3])   # 7
+        ]
+        path1 = [edges[2], edges[7], edges[5]]
+        path2 = [edges[6], edges[1], edges[0], edges[3], ]
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -60,7 +60,7 @@ class Path:
         self._edges = deque(edges[:1])
 
         is_connecting_to_path = lambda e: e.is_connecting_to(self._edges[0]) or e.is_connecting_to(self._edges[-1])
-        input_edges = edges[:]
+        input_edges = edges[1:]
         edge = next(filter(is_connecting_to_path, input_edges), None)
 
         while edge is not None:
